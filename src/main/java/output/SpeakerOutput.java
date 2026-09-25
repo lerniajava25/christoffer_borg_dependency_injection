@@ -1,5 +1,7 @@
 package output;
 
+import jakarta.enterprise.context.Dependent;
+@Dependent
 public class SpeakerOutput implements AudioOutput {
 
    public void makeSound(String sound) {
