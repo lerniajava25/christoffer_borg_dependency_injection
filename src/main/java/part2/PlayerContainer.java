@@ -5,6 +5,7 @@ import output.SpeakerOutput;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 public class PlayerContainer {
 
@@ -16,11 +17,15 @@ public class PlayerContainer {
         }
         Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
         Class<?>[] parameterTypes = constructor.getParameterTypes();
-        if (parameterTypes.length > 0) {
-            Object dependency = playerContainer(parameterTypes[0]);
-            return constructor.newInstance(dependency);
-        } else {
-            return constructor.newInstance();
-        }
+        Object[] dependencies = Arrays.stream(parameterTypes)
+                .map(parameterType -> {
+                    try {
+                        return playerContainer(parameterType);
+                    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toArray();
+        return constructor.newInstance(dependencies);
     }
 }
