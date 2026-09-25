@@ -1,3 +1,5 @@
+package part1;
+
 import output.SpeakerOutput;
 import player.SimpleMusicPlayer;
 
